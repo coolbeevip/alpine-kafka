@@ -1,9 +1,14 @@
-kafka-docker
+Kafka Docker Image (based on Alpine Linux)
 ============
 
 Dockerfile for [Apache Kafka](http://kafka.apache.org/)
 
-The image is available directly from [Docker Hub](https://hub.docker.com/r/wurstmeister/kafka/)
+## Versions of key components
+
+Alipine Linux is v3.7
+OpenJDk is jre8
+Kafka is 2.2.1
+Scala is 2.12
 
 ## Pre-Requisites
 
