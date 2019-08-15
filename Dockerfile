@@ -1,4 +1,4 @@
-FROM coolbeevip:alpine-jre:8
+FROM coolbeevip/alpine-jre:8
 
 ARG kafka_version=2.2.1
 ARG scala_version=2.12
