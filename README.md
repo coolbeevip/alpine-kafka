@@ -1,15 +1,6 @@
 Kafka Docker Image (based on Alpine Linux)
 ============
 
-Dockerfile for [Apache Kafka](http://kafka.apache.org/)
-
-## Versions of key components
-
-* Alipine Linux is v3.7
-* OpenJDk is jre8
-* Kafka is 2.2.1
-* Scala is 2.12
-
 ## Pre-Requisites
 
 - install docker-compose [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
@@ -159,24 +150,3 @@ inter.broker.listener.name = INSIDE
 * Reserve port 9092 for INSIDE listeners.
 * Reserve port 9093 for BROKER listeners.
 * Reserve port 9094 for OUTSIDE listeners.
-
-## Docker Swarm Mode
-
-The listener configuration above is necessary when deploying Kafka in a Docker Swarm using an overlay network. By separating OUTSIDE and INSIDE listeners, a host can communicate with clients outside the overlay network while still benefiting from it from within the swarm.
-
-In addition to the multiple-listener configuration, additional best practices for operating Kafka in a Docker Swarm include:
-
-* Use "deploy: global" in a compose file to launch one and only one Kafka broker per swarm node.
-* Use compose file version '3.2' (minimum Docker version 16.04) and the "long" port definition with the port in "host" mode instead of the default "ingress" load-balanced port binding. This ensures that outside requests are always routed to the correct broker. For example:
-
-```
-ports:
-   - target: 9094
-     published: 9094
-     protocol: tcp
-     mode: host
-```
-
-Older compose files using the short-version of port mapping may encounter Kafka client issues if their connection to individual brokers cannot be guaranteed.
-
-See the included sample compose file ```docker-compose-swarm.yml```
