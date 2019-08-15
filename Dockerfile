@@ -13,7 +13,6 @@ COPY start-kafka.sh broker-list.sh create-topics.sh /tmp/
 
 RUN apk add --update docker jq coreutils \
  && chmod a+x /tmp/*.sh \
- && mkdir /opt \
  && mv /tmp/start-kafka.sh /tmp/broker-list.sh /tmp/create-topics.sh /usr/bin \
  && sync \
 
