@@ -5,10 +5,10 @@ Dockerfile for [Apache Kafka](http://kafka.apache.org/)
 
 ## Versions of key components
 
-Alipine Linux is v3.7
-OpenJDk is jre8
-Kafka is 2.2.1
-Scala is 2.12
+* Alipine Linux is v3.7
+* OpenJDk is jre8
+* Kafka is 2.2.1
+* Scala is 2.12
 
 ## Pre-Requisites
 
@@ -16,6 +16,25 @@ Scala is 2.12
 - modify the ```KAFKA_ADVERTISED_HOST_NAME``` in ```docker-compose.yml``` to match your docker host IP (Note: Do not use localhost or 127.0.0.1 as the host ip if you want to run multiple brokers.)
 - if you want to customize any Kafka parameters, simply add them as environment variables in ```docker-compose.yml```, e.g. in order to increase the ```message.max.bytes``` parameter set the environment to ```KAFKA_MESSAGE_MAX_BYTES: 2000000```. To turn off automatic topic creation set ```KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'```
 - Kafka's log4j usage can be customized by adding environment variables prefixed with ```LOG4J_```. These will be mapped to ```log4j.properties```. For example: ```LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER=DEBUG, authorizerAppender```
+
+```yaml
+version: '3.2'
+services:
+  zookeeper:
+    image: coolbeevip/alpine-zookeeper
+    ports:
+      - 2181:2181
+  kafka:
+    image: coolbeevip/alpine-kafka
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+      KAFKA_CREATE_TOPICS: "test:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
 
 ## Usage
 
@@ -30,12 +49,6 @@ Add more brokers:
 Destroy a cluster:
 
 - ```docker-compose stop```
-
-## Note
-
-The default ```docker-compose.yml``` should be seen as a starting point. By default each broker will get a new port number and broker id on restart. Depending on your use case this might not be desirable. If you need to use specific ports and broker ids, modify the docker-compose configuration accordingly, e.g. [docker-compose-single-broker.yml](https://github.com/wurstmeister/kafka-docker/blob/master/docker-compose-single-broker.yml):
-
-- ```docker-compose -f docker-compose-single-broker.yml up```
 
 ## Broker IDs
 
@@ -167,7 +180,3 @@ ports:
 Older compose files using the short-version of port mapping may encounter Kafka client issues if their connection to individual brokers cannot be guaranteed.
 
 See the included sample compose file ```docker-compose-swarm.yml```
-
-## Tutorial
-
-[http://wurstmeister.github.io/kafka-docker/](http://wurstmeister.github.io/kafka-docker/)
